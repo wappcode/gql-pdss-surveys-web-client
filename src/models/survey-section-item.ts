@@ -9,11 +9,20 @@ export enum SurveySectionItemType {
 }
 // IDC = Item Conditions
 // ICT = Item Content
-export interface SurveySectionItem<ICD = unknown, ICT = unknown> {
+export interface SurveySectionItem<
+  ICD = unknown,
+  ICT = unknown,
+  QC = unknown,
+  QP = unknown,
+  QV = unknown,
+  QAS = unknown,
+  OCT = unknown,
+  OPT = unknown
+> {
   type: SurveySectionItemType;
   order: number;
   conditions?: SurveyConfiguration<ICD>;
-  question?: SurveyQuestion;
+  question?: SurveyQuestion<QC, QP, QV, QAS, OCT, OPT>;
   content?: SurveyContent<ICT>;
   section: SurveySection;
   hidden: boolean;

@@ -6,7 +6,8 @@ import {
   QueryExecutor,
   gqlparse,
   mapConnectionNodesF,
-  queryDataToQueryObject
+  queryDataToQueryObject,
+  throwGQLErrors
 } from 'graphql-client-utilities';
 import { SurveyConfiguration } from '../models';
 
@@ -64,6 +65,7 @@ export const surveyConfigurationConnection = <T>(
   ${finalFragment.query}
   `;
   return executor<{ connection: GQLConnection<SurveyConfiguration<T>> }>(query, { input })
+    .then(throwGQLErrors)
     .then((result) => result.data.connection)
     .then(mapConnectionNodesF((item) => standardizeSurveyConfiguration(item)!));
 };
@@ -85,6 +87,7 @@ export const surveyConfiguration = <T>(
   ${finalFragment.query}
     `;
   return executor<{ configuration: SurveyConfiguration<T> | null }>(query, { id })
+    .then(throwGQLErrors)
     .then((result) => result.data.configuration)
     .then((config) => (config ? standardizeSurveyConfiguration(config)! : null));
 };

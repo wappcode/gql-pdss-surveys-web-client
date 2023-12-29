@@ -5,24 +5,29 @@ import {
   QueryExecutor,
   gqlparse,
   queryDataToQueryObject,
-  mapConnectionNodesF
+  mapConnectionNodesF,
+  throwGQLErrors
 } from 'graphql-client-utilities';
 import { SurveyTargetAudience } from '../models';
 import { standardizeSurveyContent } from './survey-content.fn';
 import { standardizeSurveyConfiguration } from './survey-configuration.fn';
 import { standardizeCreateAndUpdate, standardizeDate } from './standardize-dates.fn';
+import { standardizeSurvey } from './survey.fn';
 
 export const standardizeSurveyTargetAudience = <WC, FC, PT>(
   audience: SurveyTargetAudience<WC, FC, PT>
 ): SurveyTargetAudience<WC, FC, PT> => {
-  let { welcome, farewell, presentation, starts, ends } = audience;
+  let { welcome, farewell, presentation, starts, ends, survey } = audience;
   welcome = standardizeSurveyContent<WC>(welcome);
   farewell = standardizeSurveyContent<FC>(farewell);
   presentation = standardizeSurveyConfiguration<PT>(presentation);
   starts = standardizeDate(starts);
   ends = standardizeDate(ends);
+  if (survey) {
+    survey = standardizeSurvey(survey);
+  }
   const standarAudience = standardizeCreateAndUpdate(audience);
-  return { ...standarAudience, welcome, farewell, presentation, starts, ends };
+  return { ...standarAudience, welcome, farewell, presentation, starts, ends, survey };
 };
 export const getSurveyTargetAudienceFragment = () => {
   const fragment = gqlparse`
@@ -99,6 +104,7 @@ export const surveyTargetAudienceConnection = <WC = unknown, FC = unknown, PT = 
   return executor<{ connection: GQLConnection<SurveyTargetAudience<WC, FC, PT>> }>(query, {
     input
   })
+    .then(throwGQLErrors)
     .then((result) => result.data.connection)
     .then(mapConnectionNodesF(standardizeSurveyTargetAudience));
 };
@@ -121,6 +127,7 @@ export const surveyTargetAudience = (
       ${finalFragment.query}
     `;
   return executor<{ audience: SurveyTargetAudience | undefined | null }>(query, { id })
+    .then(throwGQLErrors)
     .then((result) => result.data.audience)
     .then((item) => (item ? standardizeSurveyTargetAudience(item) : item));
 };

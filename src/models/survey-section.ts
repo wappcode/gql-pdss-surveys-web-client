@@ -8,10 +8,10 @@ import { SurveySectionItem } from './survey-section-item';
 export interface SurveySection<SC = unknown, SP = unknown> {
   title: string;
   content?: SurveyContent<SC>;
-  items: SurveySectionItem;
+  items: SurveySectionItem[];
   order: number;
   hidden: boolean;
-  presentation: SurveyConfiguration<SP>;
+  presentation?: SurveyConfiguration<SP>;
   survey: Survey;
   created: Date;
   updated: Date;

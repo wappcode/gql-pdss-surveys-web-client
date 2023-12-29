@@ -6,7 +6,8 @@ import {
   QueryExecutor,
   gqlparse,
   mapConnectionNodesF,
-  queryDataToQueryObject
+  queryDataToQueryObject,
+  throwGQLErrors
 } from 'graphql-client-utilities';
 import { SurveyQuestion } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
@@ -24,7 +25,7 @@ export const standardizeSurveyQuestion = <QC, QP, QV, QAS, OCT, OPT>(
   validators = standardizeSurveyConfiguration<QV[]>(validators);
   answerScore = standardizeSurveyConfiguration<QAS>(answerScore);
   if (Array.isArray(options)) {
-    options = options.map(standardizeSurveyQuestionOption);
+    options = options.map(standardizeSurveyQuestionOption).sort((a, b) => a.order - b.order);
   }
   return { ...standardized, presentation, content, validators, answerScore, options };
 };
@@ -113,6 +114,7 @@ export const surveyQuestionConnection = <QC, QP, QV, QAS, OCT, OPT>(
   return executor<{ connection: GQLConnection<SurveyQuestion<QC, QP, QV, QAS, OCT, OPT>> }>(query, {
     input
   })
+    .then(throwGQLErrors)
     .then((result) => result.data.connection)
     .then(mapConnectionNodesF(standardizeSurveyQuestion));
 };
@@ -134,6 +136,7 @@ export const surveyQuestion = <QC, QP, QV, QAS, OCT, OPT>(
   return executor<{ question: SurveyQuestion<QC, QP, QV, QAS, OCT, OPT> | null }>(query, {
     id
   })
+    .then(throwGQLErrors)
     .then((result) => result.data.question)
     .then((question) => (question ? standardizeSurveyQuestion(question) : null));
 };

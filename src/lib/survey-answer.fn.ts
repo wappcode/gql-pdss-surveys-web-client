@@ -6,7 +6,8 @@ import {
   QueryExecutor,
   gqlparse,
   mapConnectionNodesF,
-  queryDataToQueryObject
+  queryDataToQueryObject,
+  throwGQLErrors
 } from 'graphql-client-utilities';
 import { SurveyAnswer } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
@@ -77,6 +78,7 @@ export const surveyAnswerConnection = (
   ${finalFragment.query}
   `;
   return executor<{ connection: GQLConnection<SurveyAnswer> }>(query, { input })
+    .then(throwGQLErrors)
     .then((result) => result.data.connection)
     .then(mapConnectionNodesF(standardizeSurveyAnswer));
 };
@@ -99,6 +101,7 @@ export const surveyAnswer = (
       ${finalFragment.query}
     `;
   return executor<{ answer: SurveyAnswer | null }>(query, { id })
+    .then(throwGQLErrors)
     .then((result) => result.data.answer)
     .then((answer) => (answer ? standardizeSurveyAnswer(answer) : answer));
 };

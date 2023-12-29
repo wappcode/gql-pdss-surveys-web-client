@@ -6,14 +6,21 @@ import {
   QueryExecutor,
   gqlparse,
   mapConnectionNodesF,
-  queryDataToQueryObject
+  queryDataToQueryObject,
+  throwGQLErrors
 } from 'graphql-client-utilities';
 import { Survey } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
+import { standardizeSurveySection } from './survey-section.fn';
 
 export const standardizeSurvey = (survey: Survey): Survey => {
   const standarSurvey = standardizeCreateAndUpdate(survey);
-  return standarSurvey;
+  let { sections } = survey;
+  if (Array.isArray(sections)) {
+    sections = sections.map(standardizeSurveySection).sort((a, b) => a.order - b.order);
+  }
+
+  return { ...standarSurvey, sections };
 };
 // Build survey
 // {
@@ -108,6 +115,7 @@ export const surveyConnection = (
   ${finalFragment.query}
   `;
   return executor<{ connection: GQLConnection<Survey> }>(query, { input })
+    .then(throwGQLErrors)
     .then((result) => result.data.connection)
     .then(mapConnectionNodesF(standardizeSurvey));
 };
@@ -126,6 +134,7 @@ export const survey = (
     ${finalFragment.query}
   `;
   return executor<{ survey: Survey | undefined | null }>(query, { id })
+    .then(throwGQLErrors)
     .then((result) => result.data.survey)
     .then((survey) => (survey ? standardizeSurvey(survey) : survey));
 };
