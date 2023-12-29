@@ -1,4 +1,4 @@
-import { QueryExecutor, gqlparse } from "graphql-client-utilities";
+import { QueryExecutor, gqlparse } from 'graphql-client-utilities';
 
 export const echo = (executor: QueryExecutor, msg: string): Promise<string> => {
   const query = gqlparse`

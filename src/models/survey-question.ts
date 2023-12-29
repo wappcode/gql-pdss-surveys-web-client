@@ -1,7 +1,7 @@
-import { Survey } from "./survey";
-import { SurveyConfiguration } from "./survey-configuration";
-import { SurveyContent } from "./survey-content";
-import { SurveyQuestionOption } from "./survey-question-option";
+import { Survey } from './survey';
+import { SurveyConfiguration } from './survey-configuration';
+import { SurveyContent } from './survey-content';
+import { SurveyQuestionOption } from './survey-question-option';
 
 export interface SurveyQuestion<
   QC = unknown,
@@ -10,7 +10,7 @@ export interface SurveyQuestion<
   QAS = unknown,
   OVT = unknown,
   OCT = unknown,
-  OPT = unknown,
+  OPT = unknown
 > {
   title: string;
   code: string;
@@ -21,8 +21,10 @@ export interface SurveyQuestion<
   options?: SurveyQuestionOption<OVT, OCT, OPT>[];
   content: SurveyContent<QC>;
   presentation: SurveyConfiguration<QP>;
-  validators: SurveyConfiguration<QV>;
+  validators: SurveyConfiguration<QV[]>;
   answerScore?: SurveyConfiguration<QAS>;
   score?: number;
   survey: Survey;
+  created: Date;
+  updated: Date;
 }

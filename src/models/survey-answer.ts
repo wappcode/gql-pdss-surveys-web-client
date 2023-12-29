@@ -1,5 +1,5 @@
-import { SurveyAnswerSession } from "./survey-answer-session";
-import { SurveyQuestion } from "./survey-question";
+import { SurveyAnswerSession } from './survey-answer-session';
+import { SurveyQuestion } from './survey-question';
 
 export interface SurveyAnswer<T = string> {
   value?: T;
@@ -7,4 +7,6 @@ export interface SurveyAnswer<T = string> {
   score?: number;
   scorePercent?: number;
   session: SurveyAnswerSession;
+  created: Date;
+  updated: Date;
 }

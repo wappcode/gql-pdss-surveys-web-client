@@ -1,11 +1,11 @@
-import { SurveyConfiguration } from "./survey-configuration";
-import { SurveyContent } from "./survey-content";
-import { SurveyQuestion } from "./survey-question";
-import { SurveySection } from "./survey-section";
+import { SurveyConfiguration } from './survey-configuration';
+import { SurveyContent } from './survey-content';
+import { SurveyQuestion } from './survey-question';
+import { SurveySection } from './survey-section';
 
 export enum SurveySectionItemType {
-  question = "QUESTION",
-  content = "CONTENT",
+  question = 'QUESTION',
+  content = 'CONTENT'
 }
 // IDC = Item Conditions
 // ICT = Item Content
@@ -17,4 +17,6 @@ export interface SurveySectionItem<ICD = unknown, ICT = unknown> {
   content?: SurveyContent<ICT>;
   section: SurveySection;
   hidden: boolean;
+  created: Date;
+  updated: Date;
 }

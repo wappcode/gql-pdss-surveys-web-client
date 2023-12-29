@@ -1,6 +1,6 @@
-import { Survey } from "./survey";
-import { SurveyAnswer } from "./survey-answer";
-import { SurveyTargetAudience } from "./survey-target-audience";
+import { Survey } from './survey';
+import { SurveyAnswer } from './survey-answer';
+import { SurveyTargetAudience } from './survey-target-audience';
 
 export interface SurveyAnswerSession {
   name?: string;
@@ -13,4 +13,6 @@ export interface SurveyAnswerSession {
   answers: SurveyAnswer[];
   targetAudience: SurveyTargetAudience;
   survey: Survey;
+  created: Date;
+  updated: Date;
 }
