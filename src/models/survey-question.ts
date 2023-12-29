@@ -8,7 +8,6 @@ export interface SurveyQuestion<
   QP = unknown,
   QV = unknown,
   QAS = unknown,
-  OVT = unknown,
   OCT = unknown,
   OPT = unknown
 > {
@@ -18,10 +17,10 @@ export interface SurveyQuestion<
   required: boolean;
   other: boolean;
   hint?: string;
-  options?: SurveyQuestionOption<OVT, OCT, OPT>[];
-  content: SurveyContent<QC>;
-  presentation: SurveyConfiguration<QP>;
-  validators: SurveyConfiguration<QV[]>;
+  options?: SurveyQuestionOption<OCT, OPT>[];
+  content?: SurveyContent<QC>;
+  presentation?: SurveyConfiguration<QP>;
+  validators?: SurveyConfiguration<QV[]>;
   answerScore?: SurveyConfiguration<QAS>;
   score?: number;
   survey: Survey;
