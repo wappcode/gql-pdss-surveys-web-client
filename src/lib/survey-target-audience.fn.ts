@@ -9,7 +9,7 @@ import {
 } from 'graphql-client-utilities';
 import { SurveyTargetAudience } from '../models';
 import { standardizeSurveyContent } from './survey-content.fn';
-import { standardizeSurveyConfiguration } from './survey-configuration';
+import { standardizeSurveyConfiguration } from './survey-configuration.fn';
 import { standardizeCreateAndUpdate, standardizeDate } from './standardize-dates.fn';
 
 export const standardizeSurveyTargetAudience = <WC, FC, PT>(
