@@ -1,8 +1,9 @@
-import { SurveyConfiguration } from './survey-configuration';
-import { SurveyContent } from './survey-content';
+import { SurveyConfiguration, SurveyConfigurationInput } from './survey-configuration';
+import { BuildSurveyContentInput, SurveyContent } from './survey-content';
 import { SurveyQuestion } from './survey-question';
 
 export interface SurveyQuestionOption<CT = unknown, PT = unknown> {
+  id: string;
   value: string;
   title: string;
   order: number;
@@ -11,4 +12,19 @@ export interface SurveyQuestionOption<CT = unknown, PT = unknown> {
   question: SurveyQuestion;
   created: Date;
   updated: Date;
+}
+export interface SurveyQuestionOptionInput {
+  value: string;
+  title: string;
+  order: number;
+  question: string;
+  content?: string;
+  presentation?: string;
+}
+export interface BuildSurveyQuestionOptionInput {
+  title: string;
+  value: string;
+  order: number;
+  content?: BuildSurveyContentInput;
+  presentation?: SurveyConfigurationInput;
 }

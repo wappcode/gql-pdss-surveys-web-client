@@ -1,7 +1,7 @@
 import { Survey } from './survey';
-import { SurveyConfiguration } from './survey-configuration';
-import { SurveyContent } from './survey-content';
-import { SurveyQuestionOption } from './survey-question-option';
+import { SurveyConfiguration, SurveyConfigurationInput } from './survey-configuration';
+import { BuildSurveyContentInput, SurveyContent } from './survey-content';
+import { BuildSurveyQuestionOptionInput, SurveyQuestionOption } from './survey-question-option';
 
 export interface SurveyQuestion<
   QC = unknown,
@@ -11,11 +11,12 @@ export interface SurveyQuestion<
   OCT = unknown,
   OPT = unknown
 > {
+  id: string;
   title: string;
   code: string;
   type: string;
   required: boolean;
-  other: boolean;
+  other?: boolean;
   hint?: string;
   options?: SurveyQuestionOption<OCT, OPT>[];
   content?: SurveyContent<QC>;
@@ -26,4 +27,34 @@ export interface SurveyQuestion<
   survey: Survey;
   created: Date;
   updated: Date;
+}
+export interface SurveyQuestionInput {
+  id: string;
+  title: string;
+  code: string;
+  type: string;
+  required: boolean;
+  other?: boolean;
+  hint?: string;
+  content?: string;
+  presentation?: string;
+  validators?: string;
+  answerScore?: string;
+  score?: number;
+  survey: string;
+}
+
+export interface BuildSurveyQuestionInput {
+  title: string;
+  code: string;
+  type: string;
+  required: boolean;
+  other?: boolean;
+  hint?: string;
+  options?: BuildSurveyQuestionOptionInput[];
+  content?: BuildSurveyContentInput;
+  presentation?: SurveyConfigurationInput;
+  validators?: SurveyConfigurationInput;
+  answerScore?: SurveyConfigurationInput;
+  score?: number;
 }

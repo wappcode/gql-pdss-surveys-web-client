@@ -1,12 +1,10 @@
-import { SurveyConfiguration } from './survey-configuration';
+import { SurveyConfiguration, SurveyConfigurationInput } from './survey-configuration';
 import { SurveyContent } from './survey-content';
-import { SurveyQuestion } from './survey-question';
+import { BuildSurveyQuestionInput, SurveyQuestion } from './survey-question';
 import { SurveySection } from './survey-section';
 
-export enum SurveySectionItemType {
-  question = 'QUESTION',
-  content = 'CONTENT'
-}
+export type SurveySectionItemType = 'QUESTION' | 'CONTENT';
+
 // IDC = Item Conditions
 // ICT = Item Content
 export interface SurveySectionItem<
@@ -19,6 +17,7 @@ export interface SurveySectionItem<
   OCT = unknown,
   OPT = unknown
 > {
+  id: string;
   type: SurveySectionItemType;
   order: number;
   conditions?: SurveyConfiguration<ICD>;
@@ -28,4 +27,24 @@ export interface SurveySectionItem<
   hidden: boolean;
   created: Date;
   updated: Date;
+}
+export interface SurveySectionItemInput {
+  type: SurveySectionItemType;
+  order: number;
+  conditions?: string;
+  question?: string;
+  content?: string;
+  section: string;
+  hidden: boolean;
+  created: Date;
+  updated: Date;
+}
+
+export interface BuildSurveySectionItemInput {
+  type: SurveySectionItemType;
+  order: number;
+  conditions?: SurveyConfigurationInput;
+  question?: BuildSurveyQuestionInput;
+  content?: SurveyConfigurationInput;
+  hidden: boolean;
 }
