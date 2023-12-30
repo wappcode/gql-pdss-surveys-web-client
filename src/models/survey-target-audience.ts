@@ -35,5 +35,5 @@ export interface BuildSurveyTargetAudienceInput {
   welcome?: BuildSurveyContentInput;
   farewell?: BuildSurveyContentInput;
   attempts?: number;
-  presentation: SurveyConfigurationInput;
+  presentation?: SurveyConfigurationInput;
 }

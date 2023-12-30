@@ -21,6 +21,6 @@ export interface SurveyInput {
 
 export interface BuildSurveyInput {
   title: string;
-  targetAudience: BuildSurveyTargetAudienceInput;
+  targetAudience?: BuildSurveyTargetAudienceInput;
   sections: BuildSurveySectionInput[];
 }

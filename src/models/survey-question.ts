@@ -16,9 +16,9 @@ export interface SurveyQuestion<
   code: string;
   type: string;
   required: boolean;
-  other?: boolean;
+  other: boolean;
   hint?: string;
-  options?: SurveyQuestionOption<OCT, OPT>[];
+  options: SurveyQuestionOption<OCT, OPT>[];
   content?: SurveyContent<QC>;
   presentation?: SurveyConfiguration<QP>;
   validators?: SurveyConfiguration<QV[]>;
@@ -29,7 +29,6 @@ export interface SurveyQuestion<
   updated: Date;
 }
 export interface SurveyQuestionInput {
-  id: string;
   title: string;
   code: string;
   type: string;
@@ -40,7 +39,7 @@ export interface SurveyQuestionInput {
   presentation?: string;
   validators?: string;
   answerScore?: string;
-  score?: number;
+  score: number;
   survey: string;
 }
 

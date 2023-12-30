@@ -17,9 +17,9 @@ export interface SurveyQuestionOptionInput {
   value: string;
   title: string;
   order: number;
-  question: string;
   content?: string;
   presentation?: string;
+  question: string;
 }
 export interface BuildSurveyQuestionOptionInput {
   title: string;

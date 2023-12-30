@@ -3,6 +3,7 @@ import { SurveyAnswer } from './survey-answer';
 import { SurveyTargetAudience } from './survey-target-audience';
 
 export interface SurveyAnswerSession {
+  id: string;
   name?: string;
   username?: string;
   password?: string;
@@ -15,4 +16,14 @@ export interface SurveyAnswerSession {
   survey: Survey;
   created: Date;
   updated: Date;
+}
+export interface SurveyAnswerSessionInput {
+  name?: string;
+  username?: string;
+  password?: string;
+  ownerCode?: string;
+  score?: number;
+  completed?: boolean;
+  scorePercent?: number;
+  targetAudience: string;
 }
