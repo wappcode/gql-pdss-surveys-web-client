@@ -27,6 +27,7 @@ export interface SurveyTargetAudienceInput {
   attempts?: number;
   survey: string;
   presentation?: string;
+  password?: string;
 }
 export interface BuildSurveyTargetAudienceInput {
   title: string;
@@ -36,4 +37,5 @@ export interface BuildSurveyTargetAudienceInput {
   farewell?: BuildSurveyContentInput;
   attempts?: number;
   presentation?: SurveyConfigurationInput;
+  password?: string;
 }
