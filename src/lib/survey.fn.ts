@@ -9,7 +9,7 @@ import {
   queryDataToQueryObject,
   throwGQLErrors
 } from 'graphql-client-utilities';
-import { Survey } from '../models';
+import { BuildSurveyInput, Survey, SurveyInput } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
 import { standardizeSurveySection } from './survey-section.fn';
 
@@ -22,54 +22,6 @@ export const standardizeSurvey = (survey: Survey): Survey => {
 
   return { ...standarSurvey, sections };
 };
-// Build survey
-// {
-//     "title": "Survey 1",
-//     "sections": [
-//       {
-//         "title": "Section 1",
-//         "content": {
-//           "type": "HTML",
-//           "body":"<h1>Hola mundo</h1>",
-//           "presentation":{
-//             "type":"PRESENTATION",
-//             "value": "{className:\"section-content-title\"}"
-//           }
-
-//         },
-//         "presentation":{
-//            "type":"PRESENTATION",
-//             "value": "{className:\"section-title\"}"
-//         },
-//         "order":1,
-//         "hidden":false,
-//         "items":[
-//         {
-//               "type":"CONTENT",
-
-//           "order": 1,
-//          "content": {
-//           "type": "HTML",
-//           "body": "<h2>Section Item</h2>"
-//         },
-//           "hidden": false
-
-//         },
-//           {
-//             "type": "QUESTION",
-//             "order": 2,
-//             "question": {
-//               "title": "Question Section 1",
-//               "code": "Q01",
-//               "type":""
-//             }
-//           }
-//         ]
-
-//       }
-//     ]
-//   }
-
 export const getSurveyFragment = (): GQLQueryObject => {
   const query: GQLQueryObject = gqlparse`
   fragment fragmentSurvey on Survey{
@@ -77,6 +29,119 @@ export const getSurveyFragment = (): GQLQueryObject => {
     title    
     created
     updated
+  }
+
+    `;
+  return query;
+};
+export const getSurveyQuestionnaireFragment = (): GQLQueryObject => {
+  const query: GQLQueryObject = gqlparse`
+  fragment surveyQuestionnaireFragment on Survey {
+    id
+    title
+    sections {
+      id
+      title
+      content{
+        id
+        type
+        body
+        presentation{
+          id
+          type
+          value
+        }
+      }
+      items{
+        id
+        type
+        order
+        conditions{
+          id
+          value
+          type
+        }
+        question{
+          id
+          title
+          code
+          type
+          required
+          other
+          hint
+          options{
+            id
+            value
+            title
+            order
+            content{
+              id
+              type
+              body
+              presentation{
+                id
+                type
+                value
+              }
+            }
+            presentation{
+              id
+              type
+              value
+            }          
+          }
+          content{
+            id
+            type
+            body
+            presentation{
+              id
+              value
+              type
+            }
+          }
+          presentation{
+            id
+            type
+            value
+          }
+          answerScore{
+            id
+            type
+            value
+          }
+          score
+          survey{
+            id
+          }
+          validators{
+            id
+            type
+            value
+          }
+          
+        }
+        content{
+          id
+          type
+          body
+          presentation{
+            id
+            type
+            value
+          }
+        }
+        hidden      
+      }
+      order
+      hidden
+      presentation{
+        id
+        type
+        value
+      }
+    }
+    
   }
 
     `;
@@ -137,4 +202,81 @@ export const survey = (
     .then(throwGQLErrors)
     .then((result) => result.data.survey)
     .then((survey) => (survey ? standardizeSurvey(survey) : survey));
+};
+
+export const createSurvey = (
+  executor: QueryExecutor,
+  input: SurveyInput,
+  fragment?: GQLQueryData
+): Promise<Survey> => {
+  const finalFragment = fragment ? queryDataToQueryObject(fragment) : getSurveyFragment();
+
+  const mutation = gqlparse`
+  mutation MutationCreateSurvey($input: SurveyInput!){
+    survey: createSurvey(input: $input){
+      ...${finalFragment.operationName}
+    }
+  }
+  ${finalFragment.query}
+  `;
+  return executor<{ survey: Survey }>(mutation, { input })
+    .then(throwGQLErrors)
+    .then((result) => result.data.survey)
+    .then(standardizeSurvey);
+};
+export const updateSurvey = (
+  executor: QueryExecutor,
+  id: string,
+  input: Partial<SurveyInput>,
+  fragment?: GQLQueryData
+): Promise<Survey> => {
+  const finalFragment = fragment ? queryDataToQueryObject(fragment) : getSurveyFragment();
+
+  const mutation = gqlparse`
+  mutation MutationUpdateSurvey($id: ID!,$input: SurveyPartialInput!){
+    survey: updateSurvey(id:$id,input: $input){
+      ...${finalFragment.operationName}
+    }
+  }
+  ${finalFragment.query}
+  `;
+  return executor<{ survey: Survey }>(mutation, { input, id })
+    .then(throwGQLErrors)
+    .then((result) => result.data.survey)
+    .then(standardizeSurvey);
+};
+export const deleteSurvey = (executor: QueryExecutor, id: string): Promise<boolean> => {
+  const mutation = gqlparse`
+  mutation MutationDeleteSurvey($id: ID!){
+    success: deleteSurvey(id:$id)
+  }
+  `;
+  return executor<{ success: boolean }>(mutation, { id })
+    .then(throwGQLErrors)
+    .then((result) => result.data.success);
+};
+
+export const buildSuvey = (
+  executor: QueryExecutor,
+  input: BuildSurveyInput,
+  fragment?: GQLQueryData
+): Promise<Survey> => {
+  const finalFragment = fragment
+    ? queryDataToQueryObject(fragment)
+    : getSurveyQuestionnaireFragment();
+  const mutation = gqlparse`
+  mutation MutationBuildSurvey ($input: BuildSurveyInput!){
+  
+    survey: buildSurvey(input: $input){
+  ...${finalFragment.operationName}
+      
+    }
+    
+  }
+  ${finalFragment.query}
+  `;
+  return executor<{ survey: Survey }>(mutation, { input })
+    .then(throwGQLErrors)
+    .then((result) => result.data.survey)
+    .then(standardizeSurvey);
 };

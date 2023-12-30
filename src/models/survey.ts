@@ -12,15 +12,18 @@ export interface Survey {
   targetAudiences: SurveyTargetAudience;
   questions: SurveyQuestion[];
   sections: SurveySection[];
+  active: boolean;
   created: Date;
   updated: Date;
 }
 export interface SurveyInput {
   title: string;
+  active: boolean;
 }
 
 export interface BuildSurveyInput {
   title: string;
   targetAudience?: BuildSurveyTargetAudienceInput;
   sections: BuildSurveySectionInput[];
+  active: boolean;
 }

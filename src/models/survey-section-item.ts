@@ -1,5 +1,5 @@
 import { SurveyConfiguration, SurveyConfigurationInput } from './survey-configuration';
-import { SurveyContent } from './survey-content';
+import { BuildSurveyContentInput, SurveyContent } from './survey-content';
 import { BuildSurveyQuestionInput, SurveyQuestion } from './survey-question';
 import { SurveySection } from './survey-section';
 
@@ -45,6 +45,6 @@ export interface BuildSurveySectionItemInput {
   order: number;
   conditions?: SurveyConfigurationInput;
   question?: BuildSurveyQuestionInput;
-  content?: SurveyConfigurationInput;
+  content?: BuildSurveyContentInput;
   hidden: boolean;
 }

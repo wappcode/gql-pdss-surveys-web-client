@@ -17,5 +17,5 @@ export interface SurveyContentInput {
 export interface BuildSurveyContentInput {
   type: SurveyContentType;
   body: string;
-  presentation: SurveyConfigurationInput;
+  presentation?: SurveyConfigurationInput;
 }
