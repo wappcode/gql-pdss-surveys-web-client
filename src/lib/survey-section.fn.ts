@@ -31,82 +31,41 @@ export const standardizeSurveySection = <SC, SP>(
 
 export const getSurveySectionFragment = (): GQLQueryObject => {
   const fragment = gqlparse`
-    fragment fragmentSurveySection on SurveySection{
+  fragment fragmentSurveySection on SurveySection{
+    id
+    title
+    content{
+      id
+      type
+      body
+      presentation{
         id
-        content{
+        value
+        type
+      }
+    }
+    items {
+      id
+      type
+      order
+      conditions{
+        id
+        value
+        type
+      }
+      question{
+        id
+        code
+        title
+        type
+        required
+        other
+        hint
+        options{
           id
-          type
-          body
-          presentation{
-            id
-            value
-            type
-          }
-        }
-        items {
-          id
-          type
+          value
+          title
           order
-          conditions{
-            id
-            value
-            type
-          }
-          question{
-            id
-            code
-            title
-            type
-            required
-            other
-            hint
-            options{
-              id
-              value
-              title
-              order
-              content{
-                id
-                type
-                body
-                presentation{
-                  id
-                  type
-                  value
-                }
-              }
-            }
-            content{
-              id
-              type
-              body
-              presentation{
-                id
-                type
-                value
-              }
-            }
-            presentation {
-              id
-              type
-              value
-            }
-            answerScore{
-              id
-              type
-              value
-            }
-            score
-            survey{
-                id  
-            }
-            validators{
-              id
-              type
-              value
-            }
-            
-          }
           content{
             id
             type
@@ -117,23 +76,65 @@ export const getSurveySectionFragment = (): GQLQueryObject => {
               value
             }
           }
-          hidden
         }
-        order
-        hidden
+        content{
+          id
+          type
+          body
+          presentation{
+            id
+            type
+            value
+          }
+        }
+        presentation {
+          id
+          type
+          value
+        }
+        answerScore{
+          id
+          type
+          value
+        }
+        score
+        survey{
+            id  
+        }
+        validators{
+          id
+          type
+          value
+        }
+        
+      }
+      content{
+        id
+        type
+        body
         presentation{
           id
           type
           value
         }
-        survey{
-          id
-        }
-        
-        created
-        updated
-        
       }
+      hidden
+    }
+    order
+    hidden
+    presentation{
+      id
+      type
+      value
+    }
+    survey{
+      id
+    }
+    
+    created
+    updated
+    
+  }
     `;
   return fragment;
 };
@@ -233,7 +234,7 @@ export const updateSurveySection = (
 export const deleteSurveySection = (executor: QueryExecutor, id: string): Promise<boolean> => {
   const query = `
   mutation MutationDeleteSurveySection($id:ID!){
-    sucessful:deleteSurveySection(id: $id)
+    successful:deleteSurveySection(id: $id)
   }
   `;
   return executor<{ successful: boolean }>(query, { id })
