@@ -35,7 +35,7 @@ export const getSurveyConfigurationFragment = (): GQLQueryObject => {
   return query;
 };
 
-export const surveyConfigurationConnection = <T>(
+export const getSurveyConfigurations = <T>(
   executor: QueryExecutor,
   input?: GQLConnectionInput,
   fragment?: GQLQueryData
@@ -45,7 +45,7 @@ export const surveyConfigurationConnection = <T>(
     : getSurveyConfigurationFragment();
   const query = gqlparse`
   query QuerySurveyConfigurationConnection($input: ConnectionInput){
-    connection: surveyConfigurationConnection(input: $input){
+    connection: getSurveyConfigurations(input: $input){
    
       totalCount
       pageInfo{
@@ -70,7 +70,7 @@ export const surveyConfigurationConnection = <T>(
     .then(mapConnectionNodesF((item) => standardizeSurveyConfiguration(item)!));
 };
 
-export const surveyConfiguration = <T>(
+export const getSurveyConfiguration = <T>(
   executor: QueryExecutor,
   id: string,
   fragment?: GQLQueryData
@@ -80,7 +80,7 @@ export const surveyConfiguration = <T>(
     : getSurveyConfigurationFragment();
   const query = gqlparse`
   query QuerySurveyConfiguration($id: ID!){
-    configuration: surveyConfiguration(id: $id){
+    configuration: getSurveyConfiguration(id: $id){
           ...${finalFragment.operationName} 
     }
   }

@@ -70,7 +70,7 @@ export const getSurveyTargetAudienceFragment = () => {
   return fragment;
 };
 
-export const surveyTargetAudienceConnection = <WC = unknown, FC = unknown, PT = unknown>(
+export const getSurveyTargetAudiences = <WC = unknown, FC = unknown, PT = unknown>(
   executor: QueryExecutor,
   input?: GQLConnectionInput,
   fragment?: GQLQueryData
@@ -81,7 +81,7 @@ export const surveyTargetAudienceConnection = <WC = unknown, FC = unknown, PT = 
 
   const query = gqlparse`
     query QuerySurveyTargetAudienceConnection($input: ConnectionInput){
-        connection:surveyTargetAudienceConnection(input:$input){
+        connection:getSurveyTargetAudiences(input:$input){
           totalCount
           pageInfo{
             hasPreviousPage
@@ -109,7 +109,7 @@ export const surveyTargetAudienceConnection = <WC = unknown, FC = unknown, PT = 
     .then(mapConnectionNodesF(standardizeSurveyTargetAudience));
 };
 
-export const surveyTargetAudience = (
+export const getSurveyTargetAudience = (
   executor: QueryExecutor,
   id: string,
   fragment?: GQLQueryData
@@ -120,7 +120,7 @@ export const surveyTargetAudience = (
 
   const query = `
     query QuerySurveyTargetAudience($id: ID!){
-        audience: surveyTargetAudience(id:$id){
+        audience: getSurveyTargetAudience(id:$id){
          ... ${finalFragment.operationName}
         }
       }

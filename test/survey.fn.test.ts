@@ -4,24 +4,24 @@ import {
   buildSuvey,
   createSurvey,
   deleteSurvey,
-  survey,
-  surveyConnection,
+  getSurvey,
+  getSurveys,
   updateSurvey
 } from '../src/lib/survey.fn';
 import { BuildSurveyInput, SurveyInput } from '../src/models';
 
 describe('Survey Functions Test', async () => {
   test('Test survey connection', async () => {
-    const connection = await surveyConnection(queryExecutor);
+    const connection = await getSurveys(queryExecutor);
     expect(connection.totalCount).toBeGreaterThan(0);
   });
 
   test('Test survey null', async () => {
-    const surveyItem = await survey(queryExecutor, '1');
+    const surveyItem = await getSurvey(queryExecutor, '1');
     expect(surveyItem).toBeFalsy();
   });
   test('Test survey not null', async () => {
-    const surveyItem = await survey(queryExecutor, 'gqt03d4086ab23209f12247449ec693aa05');
+    const surveyItem = await getSurvey(queryExecutor, 'gqt03d4086ab23209f12247449ec693aa05');
     expect(surveyItem).toBeTruthy();
   });
   test('Survey Crud', async () => {

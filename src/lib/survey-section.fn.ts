@@ -138,7 +138,7 @@ export const getSurveySectionFragment = (): GQLQueryObject => {
   return fragment;
 };
 
-export const surveySectionConnection = <SC, SP>(
+export const getSurveySections = <SC, SP>(
   executor: QueryExecutor,
   input?: GQLConnectionInput,
   fragment?: GQLQueryData
@@ -147,7 +147,7 @@ export const surveySectionConnection = <SC, SP>(
 
   const query = gqlparse`
   query QuerySurveySectionConnection($input: ConnectionInput){
-    connection: surveySectionConnection(input: $input){
+    connection: getSurveySections(input: $input){
       totalCount
       pageInfo{
         hasPreviousPage
@@ -171,7 +171,7 @@ export const surveySectionConnection = <SC, SP>(
     .then(mapConnectionNodesF(standardizeSurveySection));
 };
 
-export const surveySection = <SC, SP>(
+export const getSurveySection = <SC, SP>(
   executor: QueryExecutor,
   id: string,
   fragment?: GQLQueryData
@@ -179,7 +179,7 @@ export const surveySection = <SC, SP>(
   const finalFragment = fragment ? queryDataToQueryObject(fragment) : getSurveySectionFragment();
   const query = gqlparse`
   query QuerySurveySection($id: ID!){
-    section: surveySection(id: $id){
+    section: getSurveySection(id: $id){
      ...${finalFragment.operationName}
     }
   }

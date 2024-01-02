@@ -114,7 +114,7 @@ export const getSurveySectionItemFragment = (): GQLQueryObject => {
   return fragment;
 };
 
-export const surveySectionItemConnection = <ICD, ICT, QC, QP, QV, QAS, OCT, OPT>(
+export const getSurveySectionItems = <ICD, ICT, QC, QP, QV, QAS, OCT, OPT>(
   executor: QueryExecutor,
   input?: GQLConnectionInput,
   fragment?: GQLQueryData
@@ -124,7 +124,7 @@ export const surveySectionItemConnection = <ICD, ICT, QC, QP, QV, QAS, OCT, OPT>
     : getSurveySectionItemFragment();
   const query = gqlparse`
   query QuerySurveySectionItemConnection($input: ConnectionInput){
-    connection: surveySectionItemConnection(input: $input){
+    connection: getSurveySectionItems(input: $input){
       totalCount
       pageInfo{
         hasPreviousPage
@@ -150,7 +150,7 @@ export const surveySectionItemConnection = <ICD, ICT, QC, QP, QV, QAS, OCT, OPT>
     .then(mapConnectionNodesF(standardizeSurveySectionItem));
 };
 
-export const surveySectionItem = <ICD, ICT, QC, QP, QV, QAS, OCT, OPT>(
+export const getSurveySectionItem = <ICD, ICT, QC, QP, QV, QAS, OCT, OPT>(
   executor: QueryExecutor,
   id: string,
   fragment?: GQLQueryData
@@ -160,7 +160,7 @@ export const surveySectionItem = <ICD, ICT, QC, QP, QV, QAS, OCT, OPT>(
     : getSurveySectionItemFragment();
   const query = gqlparse`
   query QuerySurveySectionItem($id: ID!){
-    item: surveySectionItem(id: $id){
+    item: getSurveySectionItem(id: $id){
      ...${finalFragment.operationName}
     }
   }

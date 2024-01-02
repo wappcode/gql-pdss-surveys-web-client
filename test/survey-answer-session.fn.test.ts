@@ -3,15 +3,15 @@ import { queryExecutor } from './query-executor';
 import {
   findSurveyAnswerSessionByOwnerCode,
   findSurveyAnswerSessionByUsernameAndPassword,
-  surveyAnswerSession,
-  surveyAnswerSessionConnection
+  getSurveyAnswerSession,
+  getSurveyAnswerSessions
 } from '../src/lib/survey-answer-session.fn';
 
 describe('Survey answer session item Functions Test', async () => {
   test('Test survey connection', async () => {
     let connection;
     try {
-      connection = await surveyAnswerSessionConnection(queryExecutor);
+      connection = await getSurveyAnswerSessions(queryExecutor);
     } catch (e) {
       console.log(e);
     }
@@ -19,11 +19,14 @@ describe('Survey answer session item Functions Test', async () => {
   });
 
   test('Test survey answer session item null', async () => {
-    const session = await surveyAnswerSession(queryExecutor, '0');
+    const session = await getSurveyAnswerSession(queryExecutor, '0');
     expect(session).toBeFalsy();
   });
   test('Test survey answer session item not null', async () => {
-    const session = await surveyAnswerSession(queryExecutor, 'pmie907eeb7a84d9c3cbd9bd7dd34042723');
+    const session = await getSurveyAnswerSession(
+      queryExecutor,
+      'pmie907eeb7a84d9c3cbd9bd7dd34042723'
+    );
     expect(session).toBeTruthy();
   });
 
