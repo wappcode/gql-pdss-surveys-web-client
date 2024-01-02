@@ -8,7 +8,7 @@ import {
   mapConnectionNodesF,
   throwGQLErrors
 } from 'graphql-client-utilities';
-import { SurveyTargetAudience } from '../models';
+import { SurveyTargetAudience, SurveyTargetAudienceInput } from '../models';
 import { standardizeSurveyContent } from './survey-content.fn';
 import { standardizeSurveyConfiguration } from './survey-configuration.fn';
 import { standardizeCreateAndUpdate, standardizeDate } from './standardize-dates.fn';
@@ -130,4 +130,61 @@ export const getSurveyTargetAudience = (
     .then(throwGQLErrors)
     .then((result) => result.data.audience)
     .then((item) => (item ? standardizeSurveyTargetAudience(item) : item));
+};
+
+export const createSurveyTargetAudience = (
+  executor: QueryExecutor,
+  input: SurveyTargetAudienceInput,
+  fragment?: GQLQueryData
+): Promise<SurveyTargetAudience> => {
+  const finalFragment = fragment
+    ? queryDataToQueryObject(fragment)
+    : getSurveyTargetAudienceFragment();
+  const query = `
+  mutation MutationCreateSurveyTargetAudience($input: SurveyTargetAudienceInput!){
+    audience:createSurveyTargetAudience(input: $input){
+      ...${finalFragment.operationName}
+    }
+  }
+  ${finalFragment.query}
+  `;
+  return executor<{ audience: SurveyTargetAudience }>(query, { input })
+    .then(throwGQLErrors)
+    .then((result) => result.data.audience)
+    .then(standardizeSurveyTargetAudience);
+};
+export const updateSurveyTargetAudience = (
+  executor: QueryExecutor,
+  id: string,
+  input: Partial<SurveyTargetAudienceInput>,
+  fragment?: GQLQueryData
+): Promise<SurveyTargetAudience> => {
+  const finalFragment = fragment
+    ? queryDataToQueryObject(fragment)
+    : getSurveyTargetAudienceFragment();
+  const query = `
+  mutation MutationUpdateSurveyTargetAudience($id:ID!,$input: SurveyTargetAudiencePartialInput!){
+    audience:updateSurveyTargetAudience(id: $id,input: $input){
+      ...${finalFragment.operationName}
+    }
+  }
+  ${finalFragment.query}
+  `;
+  return executor<{ audience: SurveyTargetAudience }>(query, { id, input })
+    .then(throwGQLErrors)
+    .then((result) => result.data.audience)
+    .then(standardizeSurveyTargetAudience);
+};
+export const deleteSurveyTargetAudience = (
+  executor: QueryExecutor,
+  id: string
+): Promise<boolean> => {
+  const query = `
+  mutation MutationDeleteSurveyTargetAudience($id:ID!){
+    successful:deleteSurveyTargetAudience(id: $id)
+  }
+  `;
+  return executor<{ successful: boolean }>(query, { id })
+    .then(throwGQLErrors)
+    .then((result) => result.data.successful);
 };
