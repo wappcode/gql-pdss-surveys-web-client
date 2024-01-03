@@ -149,15 +149,15 @@ export const createSurveyQuestion = (
   const finalFragment = fragment ? queryDataToQueryObject(fragment) : getSurveyQuestionFragment();
   const query = `
   mutation MutationCreateSurveyQuestion($input: SurveyQuestionInput!){
-    item:createSurveyQuestion(input: $input){
+    question:createSurveyQuestion(input: $input){
       ...${finalFragment.operationName}
     }
   }
   ${finalFragment.query}
   `;
-  return executor<{ item: SurveyQuestion }>(query, { input })
+  return executor<{ question: SurveyQuestion }>(query, { input })
     .then(throwGQLErrors)
-    .then((result) => result.data.item)
+    .then((result) => result.data.question)
     .then(standardizeSurveyQuestion);
 };
 export const updateSurveyQuestion = (
@@ -169,15 +169,15 @@ export const updateSurveyQuestion = (
   const finalFragment = fragment ? queryDataToQueryObject(fragment) : getSurveyQuestionFragment();
   const query = `
   mutation MutationUpdateSurveyQuestion($id:ID!,$input: SurveyQuestionPartialInput!){
-    item:updateSurveyQuestion(id: $id,input: $input){
+    question:updateSurveyQuestion(id: $id,input: $input){
       ...${finalFragment.operationName}
     }
   }
   ${finalFragment.query}
   `;
-  return executor<{ item: SurveyQuestion }>(query, { id, input })
+  return executor<{ question: SurveyQuestion }>(query, { id, input })
     .then(throwGQLErrors)
-    .then((result) => result.data.item)
+    .then((result) => result.data.question)
     .then(standardizeSurveyQuestion);
 };
 export const deleteSurveyQuestion = (executor: QueryExecutor, id: string): Promise<boolean> => {
