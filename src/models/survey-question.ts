@@ -39,7 +39,7 @@ export interface SurveyQuestionInput {
   presentation?: string;
   validators?: string;
   answerScore?: string;
-  score: number;
+  score?: number;
   survey: string;
 }
 

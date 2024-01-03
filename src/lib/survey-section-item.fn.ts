@@ -9,7 +9,7 @@ import {
   queryDataToQueryObject,
   throwGQLErrors
 } from 'graphql-client-utilities';
-import { SurveySectionItem } from '../models';
+import { SurveySectionItem, SurveySectionItemInput } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
 import { standardizeSurveyConfiguration } from './survey-configuration.fn';
 import { standardizeSurveyContent } from './survey-content.fn';
@@ -172,4 +172,58 @@ export const getSurveySectionItem = <ICD, ICT, QC, QP, QV, QAS, OCT, OPT>(
     .then(throwGQLErrors)
     .then((result) => result.data.item)
     .then((item) => (item ? standardizeSurveySectionItem(item) : null));
+};
+
+export const createSurveySectionItem = (
+  executor: QueryExecutor,
+  input: SurveySectionItemInput,
+  fragment?: GQLQueryData
+): Promise<SurveySectionItem> => {
+  const finalFragment = fragment
+    ? queryDataToQueryObject(fragment)
+    : getSurveySectionItemFragment();
+  const query = `
+  mutation MutationCreateSurveySectionItem($input: SurveySectionItemInput!){
+    item:createSurveySectionItem(input: $input){
+      ...${finalFragment.operationName}
+    }
+  }
+  ${finalFragment.query}
+  `;
+  return executor<{ item: SurveySectionItem }>(query, { input })
+    .then(throwGQLErrors)
+    .then((result) => result.data.item)
+    .then(standardizeSurveySectionItem);
+};
+export const updateSurveySectionItem = (
+  executor: QueryExecutor,
+  id: string,
+  input: Partial<SurveySectionItemInput>,
+  fragment?: GQLQueryData
+): Promise<SurveySectionItem> => {
+  const finalFragment = fragment
+    ? queryDataToQueryObject(fragment)
+    : getSurveySectionItemFragment();
+  const query = `
+  mutation MutationUpdateSurveySectionItem($id:ID!,$input: SurveySectionItemPartialInput!){
+    item:updateSurveySectionItem(id: $id,input: $input){
+      ...${finalFragment.operationName}
+    }
+  }
+  ${finalFragment.query}
+  `;
+  return executor<{ item: SurveySectionItem }>(query, { id, input })
+    .then(throwGQLErrors)
+    .then((result) => result.data.item)
+    .then(standardizeSurveySectionItem);
+};
+export const deleteSurveySectionItem = (executor: QueryExecutor, id: string): Promise<boolean> => {
+  const query = `
+  mutation MutationDeleteSurveySectionItem($id:ID!){
+    successful:deleteSurveySectionItem(id: $id)
+  }
+  `;
+  return executor<{ successful: boolean }>(query, { id })
+    .then(throwGQLErrors)
+    .then((result) => result.data.successful);
 };

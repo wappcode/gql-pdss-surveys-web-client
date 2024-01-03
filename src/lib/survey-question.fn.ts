@@ -9,7 +9,7 @@ import {
   queryDataToQueryObject,
   throwGQLErrors
 } from 'graphql-client-utilities';
-import { SurveyQuestion } from '../models';
+import { SurveyQuestion, SurveyQuestionInput } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
 import { standardizeSurveyConfiguration } from './survey-configuration.fn';
 import { standardizeSurveyContent } from './survey-content.fn';
@@ -139,4 +139,54 @@ export const getSurveyQuestion = <QC, QP, QV, QAS, OCT, OPT>(
     .then(throwGQLErrors)
     .then((result) => result.data.question)
     .then((question) => (question ? standardizeSurveyQuestion(question) : null));
+};
+
+export const createSurveyQuestion = (
+  executor: QueryExecutor,
+  input: SurveyQuestionInput,
+  fragment?: GQLQueryData
+): Promise<SurveyQuestion> => {
+  const finalFragment = fragment ? queryDataToQueryObject(fragment) : getSurveyQuestionFragment();
+  const query = `
+  mutation MutationCreateSurveyQuestion($input: SurveyQuestionInput!){
+    item:createSurveyQuestion(input: $input){
+      ...${finalFragment.operationName}
+    }
+  }
+  ${finalFragment.query}
+  `;
+  return executor<{ item: SurveyQuestion }>(query, { input })
+    .then(throwGQLErrors)
+    .then((result) => result.data.item)
+    .then(standardizeSurveyQuestion);
+};
+export const updateSurveyQuestion = (
+  executor: QueryExecutor,
+  id: string,
+  input: Partial<SurveyQuestionInput>,
+  fragment?: GQLQueryData
+): Promise<SurveyQuestion> => {
+  const finalFragment = fragment ? queryDataToQueryObject(fragment) : getSurveyQuestionFragment();
+  const query = `
+  mutation MutationUpdateSurveyQuestion($id:ID!,$input: SurveyQuestionPartialInput!){
+    item:updateSurveyQuestion(id: $id,input: $input){
+      ...${finalFragment.operationName}
+    }
+  }
+  ${finalFragment.query}
+  `;
+  return executor<{ item: SurveyQuestion }>(query, { id, input })
+    .then(throwGQLErrors)
+    .then((result) => result.data.item)
+    .then(standardizeSurveyQuestion);
+};
+export const deleteSurveyQuestion = (executor: QueryExecutor, id: string): Promise<boolean> => {
+  const query = `
+  mutation MutationDeleteSurveyQuestion($id:ID!){
+    successful:deleteSurveyQuestion(id: $id)
+  }
+  `;
+  return executor<{ successful: boolean }>(query, { id })
+    .then(throwGQLErrors)
+    .then((result) => result.data.successful);
 };

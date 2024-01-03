@@ -36,8 +36,6 @@ export interface SurveySectionItemInput {
   content?: string;
   section: string;
   hidden: boolean;
-  created: Date;
-  updated: Date;
 }
 
 export interface BuildSurveySectionItemInput {
