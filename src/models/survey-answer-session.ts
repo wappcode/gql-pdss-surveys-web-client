@@ -1,5 +1,5 @@
 import { Survey } from './survey';
-import { SurveyAnswer } from './survey-answer';
+import { SurveyAnswer, SurveyAnswerQuestionInput } from './survey-answer';
 import { SurveyTargetAudience } from './survey-target-audience';
 
 export interface SurveyAnswerSession {
@@ -23,7 +23,8 @@ export interface SurveyAnswerSessionInput {
   password?: string;
   ownerCode?: string;
   score?: number;
-  completed?: boolean;
   scorePercent?: number;
+  answers?: SurveyAnswerQuestionInput[];
   targetAudience: string;
+  completed?: boolean;
 }

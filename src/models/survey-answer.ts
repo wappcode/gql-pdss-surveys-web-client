@@ -18,3 +18,7 @@ export interface SurveyAnswerInput {
   scorePercent?: number;
   session: string;
 }
+export interface SurveyAnswerQuestionInput {
+  questionId: string;
+  value: string;
+}

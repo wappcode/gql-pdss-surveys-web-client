@@ -1,11 +1,15 @@
 import { describe, expect, test } from 'vitest';
 import { queryExecutor } from './query-executor';
 import {
+  createSurveyAnswerSession,
+  deleteSurveyAnswerSession,
   findSurveyAnswerSessionByOwnerCode,
   findSurveyAnswerSessionByUsernameAndPassword,
   getSurveyAnswerSession,
-  getSurveyAnswerSessions
+  getSurveyAnswerSessions,
+  updateSurveyAnswerSession
 } from '../src/lib/survey-answer-session.fn';
+import { SurveyAnswerSessionInput } from '../src/models';
 
 describe('Survey answer session item Functions Test', async () => {
   test('Test survey connection', async () => {
@@ -89,5 +93,39 @@ describe('Survey answer session item Functions Test', async () => {
       'demo'
     );
     expect(session).toBeTruthy();
+  });
+  test('Test survey section crud', async () => {
+    const input: SurveyAnswerSessionInput = {
+      targetAudience: 'usm35873f5f3c09e48683b564143d52f18b',
+      completed: false,
+      ownerCode: 'abcd' + Math.random(),
+      name: 'Pancho lópez'
+    };
+
+    let session;
+    try {
+      session = await createSurveyAnswerSession(queryExecutor, input);
+    } catch (e) {
+      console.log(e);
+    }
+
+    expect(session.id).toBeTruthy();
+    const newName = 'Pancho lópez actualizado';
+    let sessionUpdated;
+    try {
+      sessionUpdated = await updateSurveyAnswerSession(queryExecutor, session.id, {
+        name: newName
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    expect(sessionUpdated.name).toEqual(newName);
+    let deleted;
+    try {
+      deleted = await deleteSurveyAnswerSession(queryExecutor, session.id);
+    } catch (e) {
+      console.log(e);
+    }
+    expect(deleted).toEqual(true);
   });
 });
