@@ -12,7 +12,7 @@ export interface SurveyContent<PT = unknown> {
 export interface SurveyContentInput {
   type: SurveyContentType;
   body: string;
-  presentation: string;
+  presentation?: string;
 }
 export interface BuildSurveyContentInput {
   type: SurveyContentType;
