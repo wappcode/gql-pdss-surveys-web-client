@@ -27,4 +27,6 @@ export interface BuildSurveyQuestionOptionInput {
   order: number;
   content?: BuildSurveyContentInput;
   presentation?: SurveyConfigurationInput;
+  id?: string;
+  question?: string;
 }

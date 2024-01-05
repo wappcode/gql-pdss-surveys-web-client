@@ -38,4 +38,5 @@ export interface BuildSurveyTargetAudienceInput {
   attempts?: number;
   presentation?: SurveyConfigurationInput;
   password?: string;
+  survey?: string;
 }

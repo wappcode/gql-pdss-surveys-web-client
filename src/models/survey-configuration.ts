@@ -1,4 +1,4 @@
-export type SurveyConfigurationType = 'VALIDATORS' | 'PRESENTATION' | 'CONDITION' | 'ANSWER_SCORE';
+export type SurveyConfigurationType = 'VALIDATOR' | 'PRESENTATION' | 'CONDITION' | 'ANSWER_SCORE';
 export interface SurveyConfiguration<T> {
   id: string;
   value: T;

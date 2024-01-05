@@ -9,7 +9,7 @@ import {
   queryDataToQueryObject,
   throwGQLErrors
 } from 'graphql-client-utilities';
-import { SurveySection, SurveySectionInput } from '../models';
+import { BuildSurveySectionInput, SurveySection, SurveySectionInput } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
 import { standardizeSurveyConfiguration } from './survey-configuration.fn';
 import { standardizeSurveyContent } from './survey-content.fn';
@@ -240,4 +240,25 @@ export const deleteSurveySection = (executor: QueryExecutor, id: string): Promis
   return executor<{ successful: boolean }>(query, { id })
     .then(throwGQLErrors)
     .then((result) => result.data.successful);
+};
+
+export const buildSurveySection = (
+  executor: QueryExecutor,
+  input: BuildSurveySectionInput,
+  fragment?: GQLQueryData
+): Promise<SurveySection> => {
+  const finalFragment = fragment ? queryDataToQueryObject(fragment) : getSurveySectionFragment();
+  const query = `
+  mutation MutationBuildSurveySection($input: BuildSurveySectionInput!){
+    section: buildSurveySection(input:$input){
+      ...${finalFragment.operationName}
+    }
+  }
+  ${finalFragment.query}
+  `;
+
+  return executor<{ section: SurveySection }>(query, { input })
+    .then(throwGQLErrors)
+    .then((result) => result.data.section)
+    .then(standardizeSurveySection);
 };

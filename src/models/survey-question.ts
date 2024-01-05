@@ -56,4 +56,6 @@ export interface BuildSurveyQuestionInput {
   validators?: SurveyConfigurationInput;
   answerScore?: SurveyConfigurationInput;
   score?: number;
+  id?: string;
+  survey?: string;
 }

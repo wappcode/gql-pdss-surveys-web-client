@@ -27,9 +27,11 @@ export interface SurveySectionInput {
 }
 export interface BuildSurveySectionInput {
   title: string;
+  hidden: boolean;
+  order: number;
+  items: BuildSurveySectionItemInput[];
+  id?: string;
+  survey?: string;
   content?: BuildSurveyContentInput;
   presentation?: SurveyConfigurationInput;
-  order: number;
-  hidden: boolean;
-  items: BuildSurveySectionItemInput[];
 }

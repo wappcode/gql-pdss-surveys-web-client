@@ -41,8 +41,10 @@ export interface SurveySectionItemInput {
 export interface BuildSurveySectionItemInput {
   type: SurveySectionItemType;
   order: number;
+  hidden: boolean;
   conditions?: SurveyConfigurationInput;
   question?: BuildSurveyQuestionInput;
   content?: BuildSurveyContentInput;
-  hidden: boolean;
+  id?: string;
+  section?: string;
 }

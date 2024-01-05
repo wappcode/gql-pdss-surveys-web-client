@@ -8,7 +8,11 @@ import {
   mapConnectionNodesF,
   throwGQLErrors
 } from 'graphql-client-utilities';
-import { SurveyTargetAudience, SurveyTargetAudienceInput } from '../models';
+import {
+  BuildSurveyTargetAudienceInput,
+  SurveyTargetAudience,
+  SurveyTargetAudienceInput
+} from '../models';
 import { standardizeSurveyContent } from './survey-content.fn';
 import { standardizeSurveyConfiguration } from './survey-configuration.fn';
 import { standardizeCreateAndUpdate, standardizeDate } from './standardize-dates.fn';
@@ -187,4 +191,27 @@ export const deleteSurveyTargetAudience = (
   return executor<{ successful: boolean }>(query, { id })
     .then(throwGQLErrors)
     .then((result) => result.data.successful);
+};
+
+export const buildSurveyTargetAudience = (
+  executor: QueryExecutor,
+  input: BuildSurveyTargetAudienceInput,
+  fragment?: GQLQueryData
+): Promise<SurveyTargetAudience> => {
+  const finalFragment = fragment
+    ? queryDataToQueryObject(fragment)
+    : getSurveyTargetAudienceFragment();
+  const query = `
+  mutation MutationBuildSurveyTargetAudience($input: BuildSurveyTargetAudienceInput!){
+    audience: buildSurveyTargetAudience(input:$input){
+      ...${finalFragment.operationName}
+    }
+  }
+  ${finalFragment.query}
+  `;
+
+  return executor<{ audience: SurveyTargetAudience }>(query, { input })
+    .then(throwGQLErrors)
+    .then((result) => result.data.audience)
+    .then(standardizeSurveyTargetAudience);
 };
