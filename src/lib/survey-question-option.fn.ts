@@ -9,10 +9,17 @@ import {
   queryDataToQueryObject,
   throwGQLErrors
 } from 'graphql-client-utilities';
-import { SurveyQuestionOption, SurveyQuestionOptionInput } from '../models';
+import {
+  BuildSurveyQuestionOptionInput,
+  SurveyQuestionOption,
+  SurveyQuestionOptionInput
+} from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
-import { standardizeSurveyConfiguration } from './survey-configuration.fn';
-import { standardizeSurveyContent } from './survey-content.fn';
+import {
+  createInputFromSurveyConfiguration,
+  standardizeSurveyConfiguration
+} from './survey-configuration.fn';
+import { createBuildInputFromSurveyContent, standardizeSurveyContent } from './survey-content.fn';
 
 export const standardizeSurveyQuestionOption = <CT, PT>(
   option: SurveyQuestionOption<CT, PT>
@@ -171,4 +178,43 @@ export const deleteSurveyQuestionOption = (
   return executor<{ successful: boolean }>(query, { id })
     .then(throwGQLErrors)
     .then((result) => result.data.successful);
+};
+
+export const createInputFromSurveyQuestionOption = (
+  option: SurveyQuestionOption
+): SurveyQuestionOptionInput => {
+  const { value, title, order, content, presentation, question } = option;
+  const contentId = content?.id ?? undefined;
+  const presentationId = presentation?.id ?? undefined;
+  const questionId = question.id;
+
+  return {
+    value,
+    title,
+    order,
+    content: contentId,
+    presentation: presentationId,
+    question: questionId
+  };
+};
+
+export const createBuildInputFromSurveyQuestionOption = (
+  option: SurveyQuestionOption
+): BuildSurveyQuestionOptionInput => {
+  const { title, value, order, content, presentation, id, question } = option;
+  const questionId = question?.id ?? undefined;
+  const contentInput = content ? createBuildInputFromSurveyContent(content) : undefined;
+  const presentationInput = presentation
+    ? createInputFromSurveyConfiguration(presentation)
+    : undefined;
+  const idInput = id ?? undefined;
+  return {
+    title,
+    value,
+    order,
+    content: contentInput,
+    presentation: presentationInput,
+    id: idInput,
+    question: questionId
+  };
 };

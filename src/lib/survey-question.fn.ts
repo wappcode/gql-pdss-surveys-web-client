@@ -11,8 +11,11 @@ import {
 } from 'graphql-client-utilities';
 import { BuildSurveyQuestionInput, SurveyQuestion, SurveyQuestionInput } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
-import { standardizeSurveyConfiguration } from './survey-configuration.fn';
-import { standardizeSurveyContent } from './survey-content.fn';
+import {
+  createInputFromSurveyConfiguration,
+  standardizeSurveyConfiguration
+} from './survey-configuration.fn';
+import { createBuildInputFromSurveyContent, standardizeSurveyContent } from './survey-content.fn';
 import { standardizeSurveyQuestionOption } from './survey-question-option.fn';
 
 export const standardizeSurveyQuestion = <QC, QP, QV, QAS, OCT, OPT>(
@@ -226,4 +229,87 @@ export const buildSurveyQuestion = (
     .then(throwGQLErrors)
     .then((result) => result.data.question)
     .then(standardizeSurveyQuestion);
+};
+
+export const createInputFromSurveyQuestion = (question: SurveyQuestion): SurveyQuestionInput => {
+  const {
+    title,
+    code,
+    type,
+    required,
+    other,
+    hint,
+    content,
+    presentation,
+    validators,
+    answerScore,
+    score,
+    survey
+  } = question;
+
+  const contentId = content?.id ?? undefined;
+  const presentationId = presentation?.id ?? undefined;
+  const validatorsId = validators?.id ?? undefined;
+  const answerScoreId = answerScore?.id ?? undefined;
+  const surveyId = survey?.id ?? undefined;
+
+  return {
+    title,
+    code,
+    required,
+    type,
+    other,
+    hint,
+    content: contentId,
+    presentation: presentationId,
+    validators: validatorsId,
+    answerScore: answerScoreId,
+    score,
+    survey: surveyId
+  };
+};
+export const createBuildInputFromSurveyQuestion = (
+  question: SurveyQuestion
+): BuildSurveyQuestionInput => {
+  const {
+    id,
+    title,
+    code,
+    type,
+    required,
+    other,
+    hint,
+    content,
+    presentation,
+    validators,
+    answerScore,
+    score,
+    survey
+  } = question;
+
+  const contentInput = content ? createBuildInputFromSurveyContent(content) : undefined;
+  const presentationInput = presentation
+    ? createInputFromSurveyConfiguration(presentation)
+    : undefined;
+  const validatorsInput = validators ? createInputFromSurveyConfiguration(validators) : undefined;
+  const answerScoreInput = answerScore
+    ? createInputFromSurveyConfiguration(answerScore)
+    : undefined;
+  const surveyId = survey?.id ?? undefined;
+
+  return {
+    id,
+    title,
+    code,
+    required,
+    type,
+    other,
+    hint,
+    content: contentInput,
+    presentation: presentationInput,
+    validators: validatorsInput,
+    answerScore: answerScoreInput,
+    score,
+    survey: surveyId
+  };
 };

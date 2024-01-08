@@ -31,12 +31,13 @@ export interface SurveyTargetAudienceInput {
 }
 export interface BuildSurveyTargetAudienceInput {
   title: string;
-  starts?: Date;
-  ends?: Date;
+  starts?: string;
+  ends?: string;
   welcome?: BuildSurveyContentInput;
   farewell?: BuildSurveyContentInput;
   attempts?: number;
   presentation?: SurveyConfigurationInput;
   password?: string;
   survey?: string;
+  id?: string;
 }

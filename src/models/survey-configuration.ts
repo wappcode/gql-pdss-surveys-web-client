@@ -1,5 +1,5 @@
 export type SurveyConfigurationType = 'VALIDATOR' | 'PRESENTATION' | 'CONDITION' | 'ANSWER_SCORE';
-export interface SurveyConfiguration<T> {
+export interface SurveyConfiguration<T = unknown> {
   id: string;
   value: T;
   type: SurveyConfigurationType;

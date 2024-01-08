@@ -9,8 +9,11 @@ import {
   queryDataToQueryObject,
   throwGQLErrors
 } from 'graphql-client-utilities';
-import { SurveyContent, SurveyContentInput } from '../models';
-import { standardizeSurveyConfiguration } from './survey-configuration.fn';
+import { BuildSurveyContentInput, SurveyContent, SurveyContentInput } from '../models';
+import {
+  createInputFromSurveyConfiguration,
+  standardizeSurveyConfiguration
+} from './survey-configuration.fn';
 
 export const standardizeSurveyContent = <PT>(
   content?: SurveyContent<PT>
@@ -138,4 +141,20 @@ export const deleteSurveyContent = (executor: QueryExecutor, id: string): Promis
   return executor<{ successful: boolean }>(query, { id })
     .then(throwGQLErrors)
     .then((result) => result.data.successful);
+};
+
+export const createInputFromSurveyContent = (content: SurveyContent): SurveyContentInput => {
+  const { type, body, presentation } = content;
+  const presentationId = presentation?.id ?? undefined;
+  return { type, body, presentation: presentationId };
+};
+
+export const createBuildInputFromSurveyContent = (
+  content: SurveyContent
+): BuildSurveyContentInput => {
+  const { type, body, presentation } = content;
+  const inputPresentation = presentation
+    ? createInputFromSurveyConfiguration(presentation)
+    : undefined;
+  return { type, body, presentation: inputPresentation };
 };

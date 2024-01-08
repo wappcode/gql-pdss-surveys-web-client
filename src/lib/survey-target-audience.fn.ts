@@ -13,9 +13,12 @@ import {
   SurveyTargetAudience,
   SurveyTargetAudienceInput
 } from '../models';
-import { standardizeSurveyContent } from './survey-content.fn';
-import { standardizeSurveyConfiguration } from './survey-configuration.fn';
-import { standardizeCreateAndUpdate, standardizeDate } from './standardize-dates.fn';
+import { createBuildInputFromSurveyContent, standardizeSurveyContent } from './survey-content.fn';
+import {
+  createInputFromSurveyConfiguration,
+  standardizeSurveyConfiguration
+} from './survey-configuration.fn';
+import { standardizeCreateAndUpdate, standardizeDate, stringifyDate } from './standardize-dates.fn';
 import { standardizeSurvey } from './survey.fn';
 
 export const standardizeSurveyTargetAudience = <WC, FC, PT>(
@@ -214,4 +217,58 @@ export const buildSurveyTargetAudience = (
     .then(throwGQLErrors)
     .then((result) => result.data.audience)
     .then(standardizeSurveyTargetAudience);
+};
+
+export const crateInputFromSurveyTargetAudience = (
+  audience: SurveyTargetAudience,
+  password?: string
+): SurveyTargetAudienceInput => {
+  const { title, starts, ends, welcome, farewell, attempts, survey, presentation } = audience;
+
+  const startsInput = stringifyDate(starts);
+  const endsInput = stringifyDate(ends);
+  const welcomeId = welcome?.id;
+  const farewellId = farewell?.id;
+  const surveyId = survey?.id;
+  const presentationId = presentation?.id;
+
+  return {
+    title,
+    starts: startsInput,
+    ends: endsInput,
+    welcome: welcomeId,
+    farewell: farewellId,
+    attempts,
+    survey: surveyId,
+    presentation: presentationId,
+    password
+  };
+};
+export const crateBuildInputFromSurveyTargetAudience = (
+  audience: SurveyTargetAudience,
+  password?: string
+): BuildSurveyTargetAudienceInput => {
+  const { title, starts, ends, welcome, farewell, attempts, survey, presentation, id } = audience;
+
+  const startsInput = stringifyDate(starts);
+  const endsInput = stringifyDate(ends);
+  const welcomeInput = welcome ? createBuildInputFromSurveyContent(welcome) : undefined;
+  const farewellInput = farewell ? createBuildInputFromSurveyContent(farewell) : undefined;
+  const surveyInput = survey?.id;
+  const presentationInput = presentation
+    ? createInputFromSurveyConfiguration(presentation)
+    : undefined;
+
+  return {
+    id,
+    title,
+    starts: startsInput,
+    ends: endsInput,
+    welcome: welcomeInput,
+    farewell: farewellInput,
+    attempts,
+    survey: surveyInput,
+    presentation: presentationInput,
+    password
+  };
 };

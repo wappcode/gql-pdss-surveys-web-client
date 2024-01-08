@@ -148,3 +148,18 @@ export const deleteSurveyConfiguration = (
     .then(throwGQLErrors)
     .then((result) => result.data.successful);
 };
+
+export const createInputFromSurveyConfiguration = (
+  config: SurveyConfiguration
+): SurveyConfigurationInput => {
+  const { type, value } = config;
+  let finalValue: string;
+  if (value && typeof value === 'object') {
+    finalValue = JSON.stringify(value);
+  } else if (value) {
+    finalValue = value.toString();
+  } else {
+    throw new Error('Survey configuration value is required');
+  }
+  return { type, value: finalValue };
+};

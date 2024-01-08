@@ -11,9 +11,15 @@ import {
 } from 'graphql-client-utilities';
 import { BuildSurveySectionInput, SurveySection, SurveySectionInput } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
-import { standardizeSurveyConfiguration } from './survey-configuration.fn';
-import { standardizeSurveyContent } from './survey-content.fn';
-import { standardizeSurveySectionItem } from './survey-section-item.fn';
+import {
+  createInputFromSurveyConfiguration,
+  standardizeSurveyConfiguration
+} from './survey-configuration.fn';
+import { createBuildInputFromSurveyContent, standardizeSurveyContent } from './survey-content.fn';
+import {
+  createBuildInputFromSurveySectionItem,
+  standardizeSurveySectionItem
+} from './survey-section-item.fn';
 
 export const standardizeSurveySection = <SC, SP>(
   section: SurveySection<SC, SP>
@@ -261,4 +267,46 @@ export const buildSurveySection = (
     .then(throwGQLErrors)
     .then((result) => result.data.section)
     .then(standardizeSurveySection);
+};
+
+export const createInputFromSurveySection = (section: SurveySection): SurveySectionInput => {
+  const { title, content, order, hidden, presentation, survey } = section;
+
+  const presentationId = presentation?.id ?? undefined;
+  const contentId = content?.id ?? undefined;
+  const surveyId = survey?.id ?? undefined;
+
+  return {
+    title,
+    content: contentId,
+    order,
+    hidden,
+    presentation: presentationId,
+    survey: surveyId
+  };
+};
+export const createBuildInputFromSurveySection = (
+  section: SurveySection
+): BuildSurveySectionInput => {
+  const { title, content, order, hidden, presentation, survey, items, id } = section;
+
+  const presentationId = presentation
+    ? createInputFromSurveyConfiguration(presentation)
+    : undefined;
+  const contentId = content ? createBuildInputFromSurveyContent(content) : undefined;
+  const surveyId = survey?.id ?? undefined;
+
+  const itemsInput =
+    items && Array.isArray(items) ? items.map(createBuildInputFromSurveySectionItem) : [];
+
+  return {
+    id,
+    title,
+    content: contentId,
+    order,
+    hidden,
+    presentation: presentationId,
+    survey: surveyId,
+    items: itemsInput
+  };
 };

@@ -16,3 +16,17 @@ export const standardizeDate = (str: unknown): Date | undefined => {
     return str;
   } else return undefined;
 };
+
+export const stringifyDate = (date: unknown): string | undefined => {
+  if (!date) {
+    return undefined;
+  }
+  if (typeof date == 'string') {
+    return date;
+  }
+  if (date instanceof Date) {
+    return date.toISOString();
+  } else {
+    return date.toString();
+  }
+};

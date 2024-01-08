@@ -11,9 +11,15 @@ import {
 } from 'graphql-client-utilities';
 import { BuildSurveySectionItemInput, SurveySectionItem, SurveySectionItemInput } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
-import { standardizeSurveyConfiguration } from './survey-configuration.fn';
-import { standardizeSurveyContent } from './survey-content.fn';
-import { standardizeSurveyQuestion } from './survey-question.fn';
+import {
+  createInputFromSurveyConfiguration,
+  standardizeSurveyConfiguration
+} from './survey-configuration.fn';
+import { createBuildInputFromSurveyContent, standardizeSurveyContent } from './survey-content.fn';
+import {
+  createBuildInputFromSurveyQuestion,
+  standardizeSurveyQuestion
+} from './survey-question.fn';
 
 export const standardizeSurveySectionItem = <ICD, ICT, QC, QP, QV, QAS, OCT, OPT>(
   item: SurveySectionItem<ICD, ICT, QC, QP, QV, QAS, OCT, OPT>
@@ -249,4 +255,43 @@ export const buildSurveySectionItem = (
     .then(throwGQLErrors)
     .then((result) => result.data.item)
     .then(standardizeSurveySectionItem);
+};
+
+export const createInputFromSurveySectionItem = (
+  item: SurveySectionItem
+): SurveySectionItemInput => {
+  const { type, order, conditions, question, content, section, hidden } = item;
+  const conditionsId = conditions?.id ?? undefined;
+  const questionId = question?.id ?? undefined;
+  const contentId = content?.id ?? undefined;
+  const sectionId = section?.id ?? undefined;
+  return {
+    type,
+    order,
+    conditions: conditionsId,
+    question: questionId,
+    content: contentId,
+    section: sectionId,
+    hidden
+  };
+};
+
+export const createBuildInputFromSurveySectionItem = (
+  item: SurveySectionItem
+): BuildSurveySectionItemInput => {
+  const { type, order, conditions, question, content, section, hidden, id } = item;
+  const conditionsInput = conditions ? createInputFromSurveyConfiguration(conditions) : undefined;
+  const questionInput = question ? createBuildInputFromSurveyQuestion(question) : undefined;
+  const contentInput = content ? createBuildInputFromSurveyContent(content) : undefined;
+  const sectionInput = section?.id ?? undefined;
+  return {
+    id,
+    type,
+    order,
+    conditions: conditionsInput,
+    question: questionInput,
+    content: contentInput,
+    section: sectionInput,
+    hidden
+  };
 };

@@ -9,9 +9,9 @@ import {
   queryDataToQueryObject,
   throwGQLErrors
 } from 'graphql-client-utilities';
-import { BuildSurveyInput, Survey, SurveyInput } from '../models';
+import { BuildSurveyInput, BuildSurveyTargetAudienceInput, Survey, SurveyInput } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
-import { standardizeSurveySection } from './survey-section.fn';
+import { createBuildInputFromSurveySection, standardizeSurveySection } from './survey-section.fn';
 
 export const standardizeSurvey = (survey: Survey): Survey => {
   const standarSurvey = standardizeCreateAndUpdate(survey);
@@ -279,4 +279,20 @@ export const buildSuvey = (
     .then(throwGQLErrors)
     .then((result) => result.data.survey)
     .then(standardizeSurvey);
+};
+
+export const crateInputFromSurvey = (survey: Survey): SurveyInput => {
+  const { title, active } = survey;
+
+  return { title, active };
+};
+
+export const createBuildInputFromSurvey = (
+  survey: Survey,
+  targetAudienceInput?: BuildSurveyTargetAudienceInput
+): BuildSurveyInput => {
+  const { title, sections, active } = survey;
+  const sectionsInput =
+    sections && Array.isArray(sections) ? sections.map(createBuildInputFromSurveySection) : [];
+  return { title, targetAudience: targetAudienceInput, active, sections: sectionsInput };
 };
