@@ -9,7 +9,7 @@ import {
   queryDataToQueryObject,
   throwGQLErrors
 } from 'graphql-client-utilities';
-import { SurveyQuestion, SurveyQuestionInput } from '../models';
+import { BuildSurveyQuestionInput, SurveyQuestion, SurveyQuestionInput } from '../models';
 import { standardizeCreateAndUpdate } from './standardize-dates.fn';
 import { standardizeSurveyConfiguration } from './survey-configuration.fn';
 import { standardizeSurveyContent } from './survey-content.fn';
@@ -60,6 +60,21 @@ export const getSurveyQuestionFragment = (): GQLQueryObject => {
             type
             id
           }
+        }
+        content{
+          id
+          type
+          body
+          presentation{
+            id
+            value
+            type
+          }      
+        }
+        presentation{
+          value
+          type
+          id
         }
         answerScore{
           id
@@ -189,4 +204,26 @@ export const deleteSurveyQuestion = (executor: QueryExecutor, id: string): Promi
   return executor<{ successful: boolean }>(query, { id })
     .then(throwGQLErrors)
     .then((result) => result.data.successful);
+};
+
+export const buildSurveyQuestion = (
+  executor: QueryExecutor,
+  input: BuildSurveyQuestionInput,
+  fragment?: GQLQueryData
+): Promise<SurveyQuestion> => {
+  const finalFragment = fragment ? queryDataToQueryObject(fragment) : getSurveyQuestionFragment();
+
+  const query = `
+  mutation MutationBuildSurveyQuestion($input: BuildSurveyQuestionInput!){
+    question: buildSurveyQuestion(input: $input){
+      ...${finalFragment.operationName}
+    }
+  }
+  ${finalFragment.query}
+  
+  `;
+  return executor<{ question: SurveyQuestion }>(query, { input })
+    .then(throwGQLErrors)
+    .then((result) => result.data.question)
+    .then(standardizeSurveyQuestion);
 };
