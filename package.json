@@ -1,7 +1,7 @@
 {
   "name": "gql-pdss-surveys-web-client",
   "private": false,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "./dist/gql-pdss-surveys-web-client.umd.cjs",
   "module": "./dist/gql-pdss-surveys-web-client.js",
@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "rm -r dist && tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
@@ -40,6 +40,6 @@
     "vitest": "^1.1.0"
   },
   "dependencies": {
-    "graphql-client-utilities": "^0.1.5"
+    "graphql-client-utilities": "^0.1.7"
   }
 }
