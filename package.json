@@ -1,7 +1,7 @@
 {
   "name": "gql-pdss-surveys-web-client",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "main": "./dist/gql-pdss-surveys-web-client.umd.cjs",
   "module": "./dist/gql-pdss-surveys-web-client.js",
@@ -10,7 +10,7 @@
     ".": {
       "import": "./dist/gql-pdss-surveys-web-client.js",
       "require": "./dist/gql-pdss-surveys-web-client.umd.cjs",
-      "types": "./dist/src/main.d.ts"
+      "types": "./dist/main.d.ts"
     }
   },
   "files": [
