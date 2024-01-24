@@ -66,7 +66,16 @@ export const getSurveySectionFragment = (): GQLQueryObject => {
         type
         required
         other
-        hint
+        hint{
+          id
+            type
+            body
+            presentation{
+              id
+              value
+              type
+            }      
+        }
         options{
           id
           value

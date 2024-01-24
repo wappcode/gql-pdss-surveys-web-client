@@ -72,7 +72,10 @@ describe('Survey section Functions Test', async () => {
             type: 'SHORT_TEXT',
             required: true,
             other: false,
-            hint: 'Question Hint',
+            hint: {
+              body: 'Question Hint',
+              type: 'TEXT'
+            },
             content: {
               type: 'HTML',
               body: '<h1>Question Body</h1>'

@@ -1,6 +1,6 @@
 import { SurveyConfiguration, SurveyConfigurationInput } from './survey-configuration';
 
-export type SurveyContentType = 'HTML' | 'DIVIDER' | 'IMAGE' | 'VIDEO' | 'AUDIO' | 'ANY';
+export type SurveyContentType = 'TEXT' | 'HTML' | 'DIVIDER' | 'IMAGE' | 'VIDEO' | 'AUDIO' | 'ANY';
 export interface SurveyContent<PT = unknown> {
   id: string;
   type: SurveyContentType;

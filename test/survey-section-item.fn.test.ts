@@ -96,7 +96,14 @@ describe('Survey section item Functions Test', async () => {
         type: 'SHORT_TEXT',
         required: true,
         other: false,
-        hint: 'Question Hint',
+        hint: {
+          body: 'Question Hint',
+          type: 'TEXT',
+          presentation: {
+            value: '{"className":"question-hint-class"}',
+            type: 'PRESENTATION'
+          }
+        },
         content: {
           type: 'HTML',
           body: '<h1>Question Body</h1>'

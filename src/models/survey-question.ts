@@ -9,7 +9,8 @@ export interface SurveyQuestion<
   QV = unknown,
   QAS = unknown,
   OCT = unknown,
-  OPT = unknown
+  OPT = unknown,
+  QH = unknown
 > {
   id: string;
   title: string;
@@ -17,7 +18,7 @@ export interface SurveyQuestion<
   type: string;
   required: boolean;
   other: boolean;
-  hint?: string;
+  hint?: SurveyContent<QH>;
   options: SurveyQuestionOption<OCT, OPT>[];
   content?: SurveyContent<QC>;
   presentation?: SurveyConfiguration<QP>;
@@ -49,7 +50,7 @@ export interface BuildSurveyQuestionInput {
   type: string;
   required: boolean;
   other?: boolean;
-  hint?: string;
+  hint?: BuildSurveyContentInput;
   options?: BuildSurveyQuestionOptionInput[];
   content?: BuildSurveyContentInput;
   presentation?: SurveyConfigurationInput;

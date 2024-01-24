@@ -21,10 +21,16 @@ describe('Survey Target Audience Functions Test', async () => {
     expect(surveyItem).toBeFalsy();
   });
   test('Test survey audience not null', async () => {
-    const surveyItem = await getSurveyTargetAudience(
-      queryExecutor,
-      'usm35873f5f3c09e48683b564143d52f18b'
-    );
+    let surveyItem;
+    try {
+      surveyItem = await getSurveyTargetAudience(
+        queryExecutor,
+        'usm35873f5f3c09e48683b564143d52f18b'
+      );
+    } catch (e) {
+      console.log(e);
+    }
+
     expect(surveyItem).toBeTruthy();
   });
 

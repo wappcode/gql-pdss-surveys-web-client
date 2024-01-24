@@ -42,7 +42,16 @@ export const getSurveyQuestionFragment = (): GQLQueryObject => {
         title
         required
         other
-        hint
+        hint {
+          id
+          type
+          body
+          presentation{
+            id
+            value
+            type
+          }      
+        }
         options{
           id
           value
@@ -252,6 +261,7 @@ export const createInputFromSurveyQuestion = (question: SurveyQuestion): SurveyQ
   const validatorsId = validators?.id ?? undefined;
   const answerScoreId = answerScore?.id ?? undefined;
   const surveyId = survey?.id ?? undefined;
+  const hintId = hint?.id ?? undefined;
 
   return {
     title,
@@ -259,7 +269,7 @@ export const createInputFromSurveyQuestion = (question: SurveyQuestion): SurveyQ
     required,
     type,
     other,
-    hint,
+    hint: hintId,
     content: contentId,
     presentation: presentationId,
     validators: validatorsId,
@@ -288,6 +298,7 @@ export const createBuildInputFromSurveyQuestion = (
   } = question;
 
   const contentInput = content ? createBuildInputFromSurveyContent(content) : undefined;
+  const hintInput = hint ? createBuildInputFromSurveyContent(hint) : undefined;
   const presentationInput = presentation
     ? createInputFromSurveyConfiguration(presentation)
     : undefined;
@@ -304,7 +315,7 @@ export const createBuildInputFromSurveyQuestion = (
     required,
     type,
     other,
-    hint,
+    hint: hintInput,
     content: contentInput,
     presentation: presentationInput,
     validators: validatorsInput,
