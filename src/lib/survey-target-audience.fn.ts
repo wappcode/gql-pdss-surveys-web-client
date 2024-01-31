@@ -19,7 +19,7 @@ import {
   standardizeSurveyConfiguration
 } from './survey-configuration.fn';
 import { standardizeCreateAndUpdate, standardizeDate, stringifyDate } from './standardize-dates.fn';
-import { standardizeSurvey } from './survey.fn';
+import { getSurveyQuestionnaireFragment, standardizeSurvey } from './survey.fn';
 
 export const standardizeSurveyTargetAudience = <WC, FC, PT>(
   audience: SurveyTargetAudience<WC, FC, PT>
@@ -73,6 +73,51 @@ export const getSurveyTargetAudienceFragment = () => {
         
         
       }
+    `;
+  return fragment;
+};
+export const getSurveyTargetAudienceWithQuestionnaireFragment = () => {
+  const surveyFragment = getSurveyQuestionnaireFragment();
+  const fragment = gqlparse`
+    fragment fragmentSurveyTargetAudience on SurveyTargetAudience {
+        id
+        title
+        starts
+        ends
+        welcome{
+          id
+          type
+          body
+          presentation{
+            id
+            value
+            type
+          }
+        }
+        farewell{
+          id
+          type
+          body
+          presentation {
+            id
+            value
+            type
+          }
+        }
+        presentation {
+          id
+          value
+          type
+        }
+        survey {
+          ...${surveyFragment.operationName}
+        }
+        created
+        updated
+        
+        
+      }
+      ${surveyFragment.query}
     `;
   return fragment;
 };
