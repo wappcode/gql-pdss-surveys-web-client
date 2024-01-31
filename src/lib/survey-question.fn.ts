@@ -18,19 +18,23 @@ import {
 import { createBuildInputFromSurveyContent, standardizeSurveyContent } from './survey-content.fn';
 import { standardizeSurveyQuestionOption } from './survey-question-option.fn';
 
-export const standardizeSurveyQuestion = <QC, QP, QV, QAS, OCT, OPT>(
-  question: SurveyQuestion<QC, QP, QV, QAS, OCT, OPT>
-): SurveyQuestion<QC, QP, QV, QAS, OCT, OPT> => {
+export const standardizeSurveyQuestion = <QC, QP, QV, QAS, OCT, OPT, QH>(
+  question: SurveyQuestion<QC, QP, QV, QAS, OCT, OPT, QH>
+): SurveyQuestion<QC, QP, QV, QAS, OCT, OPT, QH> => {
   const standardized = standardizeCreateAndUpdate(question);
-  let { presentation, content, validators, answerScore, options } = question;
+  let { presentation, content, validators, answerScore, options, hint } = question;
   presentation = standardizeSurveyConfiguration<QP>(presentation);
   content = standardizeSurveyContent<QC>(content);
   validators = standardizeSurveyConfiguration<QV[]>(validators);
   answerScore = standardizeSurveyConfiguration<QAS>(answerScore);
+  const hintPresentation = standardizeSurveyConfiguration<QH>(hint?.presentation);
+  if (hint) {
+    hint = { ...hint, presentation: hintPresentation };
+  }
   if (Array.isArray(options)) {
     options = options.map(standardizeSurveyQuestionOption).sort((a, b) => a.order - b.order);
   }
-  return { ...standardized, presentation, content, validators, answerScore, options };
+  return { ...standardized, presentation, content, validators, answerScore, options, hint };
 };
 
 export const getSurveyQuestionFragment = (): GQLQueryObject => {

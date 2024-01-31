@@ -31,7 +31,7 @@ export const standardizeSurveySectionItem = <ICD, ICT, QC, QP, QV, QAS, OCT, OPT
   if (question) {
     question = standardizeSurveyQuestion(question);
   }
-  return { ...standardizedDates, content, conditions };
+  return { ...standardizedDates, content, question, conditions };
 };
 
 export const getSurveySectionItemFragment = (): GQLQueryObject => {

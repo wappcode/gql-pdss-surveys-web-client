@@ -1,5 +1,4 @@
 import { describe, expect, test } from 'vitest';
-import { queryExecutor } from './query-executor';
 import {
   buildSuvey,
   createSurvey,
@@ -9,6 +8,7 @@ import {
   updateSurvey
 } from '../src/lib/survey.fn';
 import { BuildSurveyInput, SurveyInput } from '../src/models';
+import { queryExecutor } from './query-executor';
 
 describe('Survey Functions Test', async () => {
   test('Test survey connection', async () => {
@@ -67,8 +67,13 @@ describe('Survey Functions Test', async () => {
               order: 1,
               content: {
                 type: 'HTML',
-                body: '<h2>Section Item</h2>'
+                body: '<h2>Section Item</h2>',
+                presentation: {
+                  type: 'PRESENTATION',
+                  value: JSON.stringify({ className: 'item content presentation' })
+                }
               },
+
               hidden: false
             },
             {
@@ -78,7 +83,35 @@ describe('Survey Functions Test', async () => {
                 title: 'Question Section 1',
                 code: 'Q01',
                 type: 'SHORT_TEXT',
-                required: true
+                required: true,
+                content: {
+                  body: '<h1>Question Content</h1>',
+                  type: 'HTML',
+                  presentation: {
+                    type: 'PRESENTATION',
+                    value: JSON.stringify({ className: 'question content presentation' })
+                  }
+                },
+                presentation: {
+                  type: 'PRESENTATION',
+                  value: JSON.stringify({ className: 'question presentation' })
+                },
+                answerScore: {
+                  type: 'ANSWER_SCORE',
+                  value: JSON.stringify([{ value: 'valuex', score: 1 }])
+                },
+                validators: {
+                  type: 'VALIDATOR',
+                  value: JSON.stringify([{ type: 'regex', pattern: 'xxx' }])
+                },
+                hint: {
+                  body: '<h1>Hint body</h1>',
+                  type: 'HTML',
+                  presentation: {
+                    type: 'PRESENTATION',
+                    value: JSON.stringify({ className: ' question hint presentation' })
+                  }
+                }
               },
               hidden: false
             }
@@ -100,6 +133,20 @@ describe('Survey Functions Test', async () => {
     expect(surveyItem.sections[0].presentation?.id).toBeTruthy();
     expect(surveyItem.sections[0].items[0].content?.id).toBeTruthy();
     expect(surveyItem.sections[0].items[1].question?.id).toBeTruthy();
+
+    expect(typeof surveyItem.sections[0].content?.presentation.value).toEqual('object');
+    expect(typeof surveyItem.sections[0].presentation?.value).toEqual('object');
+    expect(typeof surveyItem.sections[0].items[0].content?.presentation?.value).toEqual('object');
+    expect(typeof surveyItem.sections[0].items[1].question?.presentation?.value).toEqual('object');
+    expect(typeof surveyItem.sections[0].items[1].question?.content?.presentation?.value).toEqual(
+      'object'
+    );
+    expect(typeof surveyItem.sections[0].items[1].question?.hint?.presentation?.value).toEqual(
+      'object'
+    );
+    expect(typeof surveyItem.sections[0].items[1].question?.answerScore?.value).toEqual('object');
+    expect(typeof surveyItem.sections[0].items[1].question?.validators?.value).toEqual('object');
+
     const id = surveyItem.id;
     await updateSurvey(queryExecutor, id, { active: false });
     const hasBeenDeleted = await deleteSurvey(queryExecutor, id);
